@@ -1,0 +1,26 @@
+---
+# tasks file for wordpress-docker
+- name: create docker service directory
+  file: path={{ wordpress.app.path }}
+        state=directory
+        mode=0755
+        owner=root group=root
+  tags: wordpress
+
+- name: deploy docker compose file
+  template: src=docker-compose.yml.j2
+            dest={{ wordpress.app.path }}/docker-compose.yml
+            owner=root
+            group=root
+  tags: wordpress
+
+- name: create wordpress appliance base on compose file
+  docker_service:
+    project_name: "{{ wordpress.app.name }}"
+    project_src: "{{ wordpress.app.path }}"
+
+- name: check that containers are running
+  assert:
+    that:
+      - "wordpress_db_1.state.running"
+      - "wordpress_web_1.state.running"

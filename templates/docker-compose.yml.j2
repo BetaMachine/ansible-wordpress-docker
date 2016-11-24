@@ -11,10 +11,10 @@ services:
       - db_data:/var/lib/mysql
     restart: always
     environment:
-      - MYSQL_DATABASE: {{ wordpress.db.name | default("wordpress") }}
-      - MYSQL_ROOT_PASSWORD: {{ wordpress.db.password }}
-      - MYSQL_USER: {{ wordpress.db.user | default("wordpress") }}
-      - MYSQL_PASSWORD: {{ wordpress.db.password }}
+      MYSQL_DATABASE: {{ wordpress.db.name | default('wordpress') }}
+      MYSQL_ROOT_PASSWORD: {{ wordpress.db.password }}
+      MYSQL_USER: {{ wordpress.db.user | default('wordpress') }}
+      MYSQL_PASSWORD: {{ wordpress.db.password }}
 
   web:
     depends_on:
@@ -24,10 +24,10 @@ services:
       - "{{ wordpress.host.port }}:80"
     restart: always
     environment:
-      - WORDPRESS_DB_HOST: db:3306
-      - WORDPRESS_DB_NAME: {{ wordpress.db.name | default("wordpress") }}
-      - WORDPRESS_DB_USER: {{ wordpress.db.user | default("wordpress") }}
-      - WORDPRESS_DB_PASSWORD: {{ wordpress.db.password }}
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: {{ wordpress.db.name | default('wordpress') }}
+      WORDPRESS_DB_USER: {{ wordpress.db.user | default('wordpress') }}
+      WORDPRESS_DB_PASSWORD: {{ wordpress.db.password }}
 
 volumes:
   db_data:

@@ -14,13 +14,15 @@
             group=root
   tags: wordpress
 
-- name: create wordpress appliance base on compose file
+- name: bring up wordpress containers
   docker_service:
     project_name: "{{ wordpress.app.name }}"
     project_src: "{{ wordpress.app.path }}"
+    recreate: always
+    restarted: yes
 
 - name: check that containers are running
   assert:
     that:
-      - "wordpress_db_1.state.running"
-      - "wordpress_web_1.state.running"
+      - "db.wordpress_db_1.state.running"
+      - "web.wordpress_web_1.state.running"

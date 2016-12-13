@@ -5,24 +5,11 @@
         state=directory
         mode=0755
         owner=root group=root
-  tags: wordpress
 
 - name: deploy docker compose file
   template: src=docker-compose.yml.j2
             dest={{ wordpress.app.path }}/docker-compose.yml
             owner=root
             group=root
-  tags: wordpress
-
-- name: bring up wordpress containers
-  docker_service:
-    project_name: "{{ wordpress.app.name }}"
-    project_src: "{{ wordpress.app.path }}"
-    recreate: always
-    restarted: yes
-
-- name: check that containers are running
-  assert:
-    that:
-      - "db.wordpress_db_1.state.running"
-      - "web.wordpress_web_1.state.running"
+  notify:
+    - "restart wordpress docker"

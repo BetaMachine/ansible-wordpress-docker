@@ -11,23 +11,37 @@ services:
       - db_data:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_DATABASE: {{ wordpress.db.name | default('wordpress') }}
+      MYSQL_DATABASE: {{ wordpress.db.name }}
       MYSQL_ROOT_PASSWORD: {{ wordpress.db.password }}
-      MYSQL_USER: {{ wordpress.db.user | default('wordpress') }}
+      MYSQL_USER: {{ wordpress.db.user }}
       MYSQL_PASSWORD: {{ wordpress.db.password }}
 
-  web:
-    depends_on:
-      - db
-    image: wordpress:latest
+  php:
+    image: wordpress:php7.0-fpm
     ports:
-      - "{{ wordpress.host.port }}:80"
+      - "{{ wordpress.fpm.port }}:9000"
     restart: always
     environment:
       WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: {{ wordpress.db.name | default('wordpress') }}
-      WORDPRESS_DB_USER: {{ wordpress.db.user | default('wordpress') }}
+      WORDPRESS_DB_NAME: {{ wordpress.db.name }}
+      WORDPRESS_DB_USER: {{ wordpress.db.user }}
       WORDPRESS_DB_PASSWORD: {{ wordpress.db.password }}
+    volumes:
+      - nginx_data:/usr/src/wordpress
+
+  nginx:
+    depends_on:
+      - db
+      - php
+    image: nginx:latest
+    ports:
+      - "{{ wordpress.host.http_port }}:80"
+      - "{{ wordpress.host.https_port }}:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./nginx/log/:/var/log/nginx
+      - nginx_data:/usr/src/wordpress
 
 volumes:
   db_data:
+  nginx_data:

@@ -1,5 +1,14 @@
 ---
 # handlers file for wordpress-docker
+
+- name: cleanup docker containers
+  docker_service:
+    project_name: "{{ wordpress.app.name }}"
+    project_src: "{{ wordpress.app.path }}"
+    state: absent
+    remove_volumes: yes
+  listen: "cleanup wordpress docker"
+
 - name: start wordpress docker
   docker_service:
     project_name: "{{ wordpress.app.name }}"
@@ -11,5 +20,6 @@
   assert:
     that:
       - "db.wordpress_db_1.state.running"
-      - "web.wordpress_web_1.state.running"
+      - "php.wordpress_php_1.state.running"
+      - "nginx.wordpress_nginx_1.state.running"
   listen: "restart wordpress docker"

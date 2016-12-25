@@ -1,2 +1,13 @@
 ---
 # defaults file for wordpress-docker
+
+wordpress:
+  host:
+    name: localhost
+    http_port: 80
+    https_port: 443
+  db:
+    name: wordpress
+    user: wordpress
+  fpm:
+    port: 9000

@@ -3,7 +3,7 @@
 
 - name: cleanup docker containers
   docker_service:
-    project_name: "{{ wordpress.app.name }}"
+    project_name: wordpress
     project_src: "{{ wordpress.app.path }}"
     state: absent
     remove_volumes: yes
@@ -11,7 +11,7 @@
 
 - name: start wordpress docker
   docker_service:
-    project_name: "{{ wordpress.app.name }}"
+    project_name: wordpress
     project_src: "{{ wordpress.app.path }}"
     recreate: always
   listen: "restart wordpress docker"
